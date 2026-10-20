@@ -1,0 +1,1024 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Fourthink</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: satu situs dengan lima halaman (Beranda, Jasa Tugas, Robux, Tim, Kontak) lewat bilah atas yang menempel. Halaman Tim punya sub-tab sendiri untuk dashboard, tugas, proyek, kalender, anggota, jurnal, portofolio, dan showcase. Tema gelap hitam-biru bergaya teknologi, cyan hanya untuk angka dan aksi. */
+:root {
+  --bg: #03050b;
+  --panel: #08101f;
+  --panel-2: #060b17;
+  --soft: #0d1830;
+  --line: #172647;
+  --line-2: #22376a;
+  --fg: #e9f0ff;
+  --muted: #8fa1c6;
+  --blue: #2f6bff;
+  --cyan: #38d4ff;
+  --ok: #3ddc97;
+  --amber: #ffb547;
+  --red: #ff5470;
+  --font-display: "Chakra Petch", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 24px; position: relative; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 70; }
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+button { font-family: inherit; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.mut { color: var(--muted); }
+.mono { font-family: var(--font-mono); }
+
+/* latar */
+.aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(55% 40% at 85% -8%, rgba(47,107,255,.34), transparent 70%), radial-gradient(40% 35% at 5% 25%, rgba(56,212,255,.12), transparent 70%), radial-gradient(45% 35% at 60% 105%, rgba(47,107,255,.16), transparent 70%); }
+.grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(47,107,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(47,107,255,.08) 1px, transparent 1px);
+  background-size: 46px 46px; -webkit-mask-image: radial-gradient(80% 65% at 50% 15%, #000 15%, transparent 78%); mask-image: radial-gradient(80% 65% at 50% 15%, #000 15%, transparent 78%); }
+#net { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+/* bilah atas */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 60;
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px));
+  background: rgba(3,5,11,.84); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.top .in { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: none; background: none; border: 0; color: inherit; cursor: pointer; padding: 0; }
+.brand svg { width: 38px; height: 38px; filter: drop-shadow(0 0 10px rgba(47,107,255,.65)); }
+.brand .word { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; letter-spacing: .16em; text-transform: uppercase; line-height: 1; }
+.brand .word b { color: var(--cyan); font-weight: 700; }
+.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; min-width: 0; flex: 1; justify-content: center; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: none; background: transparent; border: 0; color: var(--muted); padding: 8px 14px; font-family: var(--font-mono); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s; }
+.tab:hover { color: var(--fg); }
+.tab[aria-current="page"] { color: var(--cyan); border-bottom-color: var(--cyan); }
+.tab .n { margin-left: 6px; background: var(--red); color: #fff; font-size: .66rem; padding: 1px 6px; border-radius: 99px; }
+.cta-top { flex: none; }
+@media (max-width: 700px) { .brand .word { display: none; } .tabs { justify-content: flex-start; } .cta-top { display: none; } }
+
+main { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; padding-block: 28px 40px; }
+.page { display: none; }
+.page.active { display: block; animation: rise .35s ease; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* tombol */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--font-display); font-weight: 600; font-size: 1rem; letter-spacing: .04em;
+  padding: 12px 22px; border: 1px solid var(--blue); border-radius: 3px; background: linear-gradient(135deg, #3a76ff, #1b46c9); color: #fff; text-decoration: none; cursor: pointer;
+  box-shadow: 0 10px 34px -10px rgba(47,107,255,.85), inset 0 1px 0 rgba(255,255,255,.18); transition: transform .15s, box-shadow .15s; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 3px rgba(56,212,255,.16), 0 14px 38px -10px rgba(47,107,255,.95), inset 0 1px 0 rgba(255,255,255,.18); }
+.btn.ghost { background: rgba(8,16,31,.6); border-color: var(--line-2); box-shadow: none; color: var(--fg); }
+.btn.ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+.btn.danger { background: linear-gradient(135deg, #e11d48, #9f1239); border-color: #e11d48; }
+.btn.small { padding: 8px 16px; font-size: .9rem; }
+.btn.block { width: 100%; }
+.mini { background: var(--soft); color: var(--fg); border: 1px solid var(--line-2); border-radius: 3px; padding: 5px 11px; font-size: .78rem; cursor: pointer; transition: border-color .15s, color .15s; }
+.mini:hover { border-color: var(--cyan); color: var(--cyan); }
+.mini.danger:hover { border-color: var(--red); color: var(--red); }
+
+/* panel bergaris gradien */
+.panel { position: relative; border: 1px solid transparent; border-radius: 4px; min-width: 0;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2)) padding-box, linear-gradient(140deg, rgba(56,212,255,.9), rgba(47,107,255,.35) 38%, rgba(34,55,106,.5) 70%, rgba(56,212,255,.55)) border-box;
+  box-shadow: 0 30px 80px -38px rgba(47,107,255,.65); }
+.plain { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 20px; min-width: 0; transition: border-color .2s, transform .2s; }
+.plain.hov:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.plain h3 { font-family: var(--font-display); font-size: 1.12rem; margin-bottom: 6px; }
+.plain p { margin: 8px 0; }
+
+.eyebrow { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); margin-bottom: 12px; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.6rem); line-height: 1.1; text-wrap: balance; }
+.sec-sub { color: var(--muted); max-width: 58ch; margin-top: 12px; }
+.sec-head { margin-bottom: clamp(24px, 4vw, 38px); }
+.blk { padding-top: clamp(44px, 7vw, 78px); margin-top: clamp(44px, 7vw, 78px); border-top: 1px solid var(--line); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(28px, 5vw, 64px); align-items: center; padding-block: clamp(20px, 5vw, 56px) 20px; }
+.hero > * { min-width: 0; }
+.tag { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); border: 1px solid var(--line-2); padding: 7px 14px; background: rgba(8,16,31,.7); }
+.tag i { width: 8px; height: 8px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); display: inline-block; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.3rem, 5.8vw, 4.2rem); line-height: 1.04; letter-spacing: -.012em; margin: 22px 0 18px; text-wrap: balance; }
+h1 em { font-style: normal; background: linear-gradient(90deg, #5b8dff, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { color: var(--muted); font-size: 1.08rem; max-width: 50ch; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+.ticker { padding: 6px 22px; }
+.ticker button { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; text-align: left; background: none; border: 0; border-top: 1px solid var(--line); color: var(--fg); padding: 16px 0; cursor: pointer; }
+.ticker button:first-child { border-top: 0; }
+.ticker button:hover .k { color: var(--cyan); }
+.ticker .k { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
+.ticker .v { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; font-variant-numeric: tabular-nums; text-align: right; }
+.ticker .v small { font-family: var(--font-mono); font-weight: 400; font-size: .72rem; color: var(--muted); display: block; }
+@media (max-width: 880px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+.three { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; }
+.gate { padding: 28px 26px 26px; display: flex; flex-direction: column; gap: 10px; }
+.gate .ico { width: 46px; height: 46px; color: var(--cyan); }
+.gate h3 { font-family: var(--font-display); font-size: 1.35rem; }
+.gate p { color: var(--muted); font-size: .96rem; }
+.gate .btn { margin-top: auto; align-self: flex-start; }
+
+/* konsol */
+.console-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.console-head .live { display: inline-flex; align-items: center; gap: 8px; color: var(--cyan); }
+.console-head .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+.console-body { padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+.flabel { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.flabel span { color: var(--fg); float: right; letter-spacing: 0; }
+.stepper { display: flex; border: 1px solid var(--line-2); background: var(--bg); }
+.stepper button { width: 48px; background: var(--panel); border: 0; color: var(--cyan); font-family: var(--font-mono); font-size: 1.3rem; cursor: pointer; }
+.stepper button:hover { background: rgba(47,107,255,.22); }
+.stepper input { flex: 1; min-width: 0; width: 100%; text-align: center; background: transparent; color: var(--fg); border: 0; border-inline: 1px solid var(--line-2); font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; padding: 10px 4px; -moz-appearance: textfield; font-variant-numeric: tabular-nums; }
+.stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.quick { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.quick button { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); background: transparent; border: 1px solid var(--line-2); padding: 6px 12px; cursor: pointer; }
+.quick button:hover { color: var(--cyan); border-color: var(--cyan); }
+.quick button[aria-pressed="true"] { color: var(--bg); background: var(--cyan); border-color: var(--cyan); font-weight: 600; }
+textarea, .field-in { background: var(--bg); color: var(--fg); border: 1px solid var(--line-2); border-radius: 0; padding: 11px 12px; font-family: var(--font-body); font-size: .95rem; min-width: 0; }
+textarea { width: 100%; min-height: 78px; resize: vertical; }
+textarea::placeholder, .field-in::placeholder { color: #566a92; }
+.receipt { border-top: 1px dashed var(--line-2); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.receipt .r { display: flex; justify-content: space-between; gap: 12px; }
+.receipt .r b { color: var(--fg); font-weight: 500; }
+.receipt .t { margin-top: 8px; align-items: baseline; }
+.receipt .t span { text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; }
+.receipt .t b { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 5vw, 2.4rem); color: var(--cyan); text-shadow: 0 0 24px rgba(56,212,255,.35); }
+.fine { font-size: .78rem; color: var(--muted); }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); align-items: start; }
+@media (max-width: 880px) { .split { grid-template-columns: minmax(0, 1fr); } }
+
+/* kartu layanan */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.card { padding: 26px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
+.card .ico { width: 44px; height: 44px; color: var(--cyan); }
+.card h3 { font-family: var(--font-display); font-size: 1.3rem; }
+.card p { color: var(--muted); font-size: .95rem; }
+.price { margin-top: auto; padding-top: 16px; border-top: 1px dashed var(--line-2); display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.price .amt { font-family: var(--font-display); font-weight: 700; font-size: 2rem; font-variant-numeric: tabular-nums; }
+.price .amt.soft { font-size: 1.25rem; color: var(--cyan); }
+.price .unit { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); }
+.ex { margin-top: 24px; padding: 22px 24px; }
+.ex h3 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 14px; }
+.ex-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.ex-grid div { border: 1px solid var(--line); padding: 12px 14px; background: rgba(3,5,11,.5); min-width: 0; }
+.ex-grid small { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.ex-grid b { font-family: var(--font-display); font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+
+/* robux */
+.rb-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 420px) { .rb-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rchip { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; transition: border-color .15s, background .15s; }
+.rchip input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+.rchip .amt { font-family: var(--font-mono); font-weight: 600; }
+.rchip .prc { font-size: .76rem; color: var(--muted); }
+.rchip:hover { border-color: var(--muted); }
+.rchip:has(input:checked) { border-color: var(--cyan); background: rgba(56,212,255,.09); }
+.rchip:has(input:focus-visible) { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.field-in.full { width: 100%; }
+.pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.pack { display: flex; flex-direction: column; gap: 4px; padding: 20px; border: 1px solid var(--line); background: var(--panel); min-width: 0; transition: border-color .15s; }
+.pack:hover { border-color: var(--cyan); }
+.pack .robux { font-family: var(--font-mono); font-weight: 600; font-size: 1.8rem; line-height: 1.1; }
+.pack .unit { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.pack .pp { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin-top: 12px; }
+.pack .rate { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); margin-bottom: 14px; }
+.pack .btn { margin-top: auto; }
+
+/* langkah & FAQ */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; list-style: none; padding: 0; margin: 0; counter-reset: s; }
+.steps li { position: relative; padding: 22px 20px; border: 1px solid var(--line); background: rgba(8,16,31,.65); counter-increment: s; min-width: 0; }
+.steps li::before { content: "0" counter(s); display: block; font-family: var(--font-mono); font-size: .85rem; letter-spacing: .1em; color: var(--cyan); margin-bottom: 10px; }
+.steps li::after { content: ""; position: absolute; left: -1px; top: -1px; width: 20px; height: 20px; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+.steps h3 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 6px; }
+.steps p { color: var(--muted); font-size: .92rem; }
+.faq { max-width: 780px; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { list-style: none; cursor: pointer; padding: 18px 44px 18px 0; position: relative; font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: 1.4rem; color: var(--cyan); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { padding: 0 0 20px; color: var(--muted); max-width: 64ch; }
+
+/* kontak */
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.contact { padding: 28px; min-width: 0; }
+.contact .label { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.contact .value { margin-top: 8px; font-family: var(--font-mono); font-weight: 600; font-size: clamp(1.1rem, 2.6vw, 1.45rem); overflow-wrap: anywhere; user-select: all; }
+.contact .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 18px; }
+.status { font-family: var(--font-mono); font-size: .78rem; color: var(--cyan); }
+
+/* ===== Halaman Tim ===== */
+.subtabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 26px; padding-bottom: 2px; border-bottom: 1px solid var(--line); }
+.subtabs::-webkit-scrollbar { display: none; }
+.stab { flex: none; background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 10px 14px; font-size: .9rem; font-weight: 500; cursor: pointer; margin-bottom: -1px; }
+.stab:hover { color: var(--fg); }
+.stab[aria-current="true"] { color: var(--cyan); border-bottom-color: var(--cyan); }
+.stab .n { margin-left: 6px; background: var(--red); color: #fff; font-family: var(--font-mono); font-size: .66rem; padding: 1px 6px; border-radius: 99px; }
+.sub { display: none; }
+.sub.active { display: block; animation: rise .3s ease; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; }
+.head h3 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 3vw, 1.9rem); line-height: 1.1; }
+.head p { color: var(--muted); margin-top: 4px; }
+.row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+.g4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.g2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; }
+.grid > *, .g2 > *, .g4 > * { min-width: 0; }
+.list { display: flex; flex-direction: column; gap: 10px; }
+.sub-h { font-family: var(--font-display); font-size: 1.15rem; margin: 26px 0 12px; color: var(--cyan); }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px; }
+.stat b { display: block; font-family: var(--font-display); font-size: 2.1rem; line-height: 1.1; color: var(--cyan); font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: .85rem; }
+.bar { height: 8px; background: #101c38; border-radius: 99px; overflow: hidden; margin: 8px 0; }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); border-radius: 99px; transition: width .5s; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: .72rem; font-weight: 500; border: 1px solid var(--line-2); color: var(--muted); background: var(--soft); white-space: nowrap; }
+.badge.ok { color: var(--ok); border-color: rgba(61,220,151,.4); }
+.badge.warn { color: var(--amber); border-color: rgba(255,181,71,.4); }
+.badge.prog { color: var(--cyan); border-color: rgba(56,212,255,.45); }
+.badge.late { color: var(--red); border-color: rgba(255,84,112,.4); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.acts { display: flex; gap: 8px; margin-top: 12px; }
+.lnk { display: inline-block; margin-top: 8px; color: var(--cyan); font-size: .88rem; }
+.lnk:hover { text-decoration: underline; }
+.empty { border: 1px dashed var(--line-2); padding: 26px; text-align: center; color: var(--muted); }
+.empty b { display: block; color: var(--fg); margin-bottom: 4px; }
+.item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--panel); border: 1px solid var(--line); padding: 12px 14px; transition: border-color .2s; }
+.item:hover { border-color: var(--line-2); }
+.item small { display: block; color: var(--muted); font-size: .8rem; }
+.item.task { align-items: flex-start; }
+.item.task.done b { text-decoration: line-through; color: var(--muted); }
+.grow { flex: 1; min-width: 0; }
+.item .acts { margin: 0; flex: none; }
+input[type=checkbox] { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--cyan); cursor: pointer; flex: none; }
+.who { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-family: var(--font-mono); font-size: .6rem; font-weight: 600; color: #fff; vertical-align: middle; margin-right: 6px; }
+.squad .m { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); }
+.squad .m:first-of-type { border-top: 0; }
+.squad .m b { display: block; font-size: .96rem; }
+.squad .m small { color: var(--muted); font-size: .8rem; }
+.av { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 10px; font-family: var(--font-mono); font-weight: 600; font-size: .85rem; color: #fff; }
+.donut-wrap { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: 12px; }
+.donut { position: relative; width: 132px; height: 132px; flex: none; }
+.donut svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.donut .c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; }
+.donut .c small { display: block; font-family: var(--font-body); font-weight: 400; font-size: .7rem; color: var(--muted); }
+.mrow { margin-top: 12px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; align-items: center; }
+.chip { background: transparent; color: var(--muted); border: 1px solid var(--line-2); border-radius: 99px; padding: 6px 14px; font-size: .85rem; cursor: pointer; transition: .15s; }
+.chip:hover { border-color: var(--cyan); }
+.chip[aria-pressed="true"] { color: var(--cyan); border-color: var(--cyan); background: rgba(56,212,255,.08); }
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.cal-head h3 { font-family: var(--font-display); font-size: 1.25rem; margin: 0; text-transform: capitalize; }
+.cal-nav { display: flex; gap: 6px; }
+.dow, .days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.dow span { text-align: center; font-family: var(--font-mono); font-size: .7rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; padding-bottom: 4px; }
+.day { aspect-ratio: 1 / 1; max-height: 78px; width: 100%; background: var(--soft); border: 1px solid transparent; color: var(--fg); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 7px 2px 4px; font-size: .86rem; cursor: pointer; font-variant-numeric: tabular-nums; transition: border-color .15s; }
+.day:hover { border-color: var(--blue); }
+.day.out { background: transparent; color: #3e5079; }
+.day.today { border-color: var(--cyan); }
+.day[aria-pressed="true"] { background: rgba(47,107,255,.28); border-color: var(--blue); }
+.dots { display: flex; gap: 3px; }
+.dots i { width: 6px; height: 6px; border-radius: 50%; background: #7c5cff; }
+.dots i.t { background: var(--cyan); }
+.dots i.l { background: var(--red); }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; color: var(--muted); font-size: .8rem; }
+.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.member { text-align: center; }
+.member .avatar { width: 76px; height: 76px; margin: 0 auto 12px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: 1.4rem; color: #fff; border: 2px solid var(--cyan); box-shadow: 0 0 24px rgba(47,107,255,.5); }
+.member .tags, .member .acts { justify-content: center; }
+.role { color: var(--cyan); font-size: .85rem; }
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before { content: ""; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.tl { position: relative; margin-bottom: 16px; }
+.dot { position: absolute; left: -28px; top: 22px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--cyan); }
+.kv { font-size: .9rem; color: var(--muted); }
+.kv b { color: var(--cyan); font-weight: 600; }
+.grp { margin-bottom: 28px; }
+.grp > h3 { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 12px; }
+.thumb { height: 92px; margin-bottom: 12px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 2.2rem; background: linear-gradient(135deg, #0a1a4a, #06222e); color: var(--cyan); }
+.team-note { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; }
+.team-note .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* modal */
+.modal { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.74); display: grid; place-items: center; overflow: auto;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.modal[hidden] { display: none; }
+.sheet { background: var(--panel); border: 1px solid var(--line-2); padding: 24px; width: min(540px, 100%); max-height: 90vh; overflow: auto; animation: rise .25s; }
+.sheet h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 16px; }
+.sheet label { display: block; margin-bottom: 14px; font-size: .84rem; color: var(--muted); }
+.sheet .field-in, .sheet textarea { width: 100%; margin-top: 6px; display: block; }
+.sheet textarea.code { font-family: var(--font-mono); font-size: .78rem; min-height: 180px; }
+.err { display: block; color: var(--red); font-size: .78rem; margin-top: 4px; }
+.sheet .foot { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.rng { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.rng input { flex: 1; accent-color: var(--blue); }
+.rng output { font-family: var(--font-mono); min-width: 3.5ch; text-align: right; color: var(--cyan); }
+#toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 30px); background: var(--soft); border: 1px solid var(--cyan); padding: 10px 18px; opacity: 0; pointer-events: none; transition: .3s; z-index: 90; font-size: .9rem; max-width: calc(100% - 32px); }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+footer { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px 32px; flex-wrap: wrap; color: var(--muted); font-size: .84rem; }
+footer .brand svg { width: 28px; height: 28px; }
+footer .brand .word { font-size: 1rem; display: inline; }
+footer p { max-width: 62ch; }
+.fab { position: fixed; z-index: 55; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; text-decoration: none; font-family: var(--font-display); font-weight: 600; letter-spacing: .04em; color: #fff; background: linear-gradient(135deg, #3a76ff, #1b46c9); border: 1px solid var(--blue); border-radius: 999px; box-shadow: 0 12px 34px -8px rgba(47,107,255,.9); }
+.fab svg { width: 20px; height: 20px; }
+@media (max-width: 460px) { .fab span { display: none; } .fab { padding: 14px; } .item { flex-wrap: wrap; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="fg" gradientUnits="userSpaceOnUse" x1="6" y1="3" x2="42" y2="45"><stop offset="0" stop-color="#38d4ff"/><stop offset="1" stop-color="#2f6bff"/></linearGradient>
+    <symbol id="logo" viewBox="0 0 48 48">
+      <path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" fill="none" stroke="url(#fg)" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M29 14 L16.5 29.5 H34" fill="none" stroke="url(#fg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M29 14 V36" fill="none" stroke="url(#fg)" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M6 24 H12 M36 20 H42" fill="none" stroke="#38d4ff" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="29" cy="14" r="2.3" fill="#38d4ff"/><circle cx="16.5" cy="29.5" r="2.3" fill="#38d4ff"/><circle cx="29" cy="36" r="2.3" fill="#2f6bff"/><circle cx="12" cy="24" r="1.8" fill="#38d4ff"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="aurora"></div>
+<div class="grid-bg"></div>
+<canvas id="net" aria-hidden="true"></canvas>
+
+<header class="top">
+  <div class="in">
+    <button class="brand" type="button" data-go="beranda" aria-label="Fourthink, beranda"><svg aria-hidden="true"><use href="#logo"/></svg><span class="word">Four<b>think</b></span></button>
+    <nav class="tabs" id="tabs" aria-label="Halaman"></nav>
+    <a class="btn small cta-top" href="https://wa.me/6289667809564" target="_blank" rel="noopener">Chat Admin</a>
+  </div>
+</header>
+
+<main>
+  <!-- BERANDA -->
+  <section id="beranda" class="page">
+    <div class="hero">
+      <div>
+        <span class="tag"><i></i> Fourthink</span>
+        <h1>Tugas kuliah, <em>Robux</em>, dan kerja tim dalam satu tempat.</h1>
+        <p class="lead">Pesan makalah dan proyek website, top up Robux lewat admin, atau kelola tugas dan proyek timmu. Semua pesanan dikirim ke admin lewat WhatsApp.</p>
+        <div class="cta">
+          <button class="btn" data-go="jasa">Pesan jasa tugas</button>
+          <button class="btn ghost" data-go="robux">Beli Robux</button>
+        </div>
+      </div>
+      <div class="panel ticker" aria-label="Ringkasan harga">
+        <button type="button" data-go="jasa"><span class="k">Makalah</span><span class="v">Rp5.000<small>per halaman</small></span></button>
+        <button type="button" data-go="jasa"><span class="k">Proyek website</span><span class="v">Rp35.000<small>per proyek</small></span></button>
+        <button type="button" data-go="robux"><span class="k">Robux mulai</span><span class="v" id="tickRobux">Rp15.000<small>80 Robux</small></span></button>
+        <button type="button" data-go="jasa"><span class="k">Tugas kuliah lain</span><span class="v">Via chat<small>harga sesuai tugas</small></span></button>
+      </div>
+    </div>
+
+    <section class="blk">
+      <div class="sec-head"><p class="eyebrow">// isi situs</p><h2>Tiga bagian, satu admin.</h2></div>
+      <div class="three">
+        <article class="panel gate">
+          <svg class="ico" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5h16l8 8v26H11z"/><path d="M27 5v8h8"/><path d="M17 21h12M17 27h12M17 33h7"/></svg>
+          <h3>Jasa Tugas Kuliah</h3><p>Makalah, proyek website, dan tugas kuliah lain dengan harga yang jelas dari awal.</p>
+          <button class="btn ghost small" data-go="jasa">Buka halaman</button>
+        </article>
+        <article class="panel gate">
+          <svg class="ico" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 4l15 8.5v17L22 38 7 29.5v-17z"/><path d="M22 14v10M17 19h10"/><path d="M14 40h16"/></svg>
+          <h3>Toko Robux</h3><p>Pilih paket Robux, isi username Roblox, lalu kirim pesanan ke admin. Tanpa password akun.</p>
+          <button class="btn ghost small" data-go="robux">Buka halaman</button>
+        </article>
+        <article class="panel gate">
+          <svg class="ico" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="6" width="34" height="32" rx="1"/><path d="M5 15h34"/><path d="M12 24h8M12 30h14"/><circle cx="32" cy="27" r="3"/></svg>
+          <h3>Dashboard Tim</h3><p>FourthinkGroup: pembagian tugas, progres proyek, kalender deadline, jurnal, dan portofolio.</p>
+          <button class="btn ghost small" data-go="tim">Buka halaman</button>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <!-- JASA TUGAS -->
+  <section id="jasa" class="page">
+    <div class="split">
+      <div>
+        <p class="eyebrow">// jasa tugas kuliah</p>
+        <h2>Makalah, proyek website, dan tugas lain.</h2>
+        <p class="sec-sub">Harga jelas dari awal. Isi jumlah halaman atau proyek pada konsol, lalu kirim pesanan ke admin lewat WhatsApp.</p>
+        <div class="cards" style="margin-top:28px;grid-template-columns:minmax(0,1fr)">
+          <article class="panel card">
+            <h3>Makalah</h3><p>Untuk berbagai mata kuliah, dihitung per halaman.</p>
+            <div class="price"><span class="amt">Rp5.000</span><span class="unit">/ halaman</span></div>
+          </article>
+          <article class="panel card">
+            <h3>Proyek Website</h3><p>Untuk tugas atau mata kuliah pemrograman web. Satu harga per proyek.</p>
+            <div class="price"><span class="amt">Rp35.000</span><span class="unit">/ proyek</span></div>
+          </article>
+          <article class="panel card">
+            <h3>Tugas Kuliah Lain</h3><p>Kirim detail dan tenggatnya, harga disepakati lewat chat.</p>
+            <div class="price"><span class="amt soft">Sesuai tugas</span><span class="unit">via chat admin</span></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="panel" id="pesan" aria-label="Konsol pesanan jasa" style="position:sticky;top:calc(80px + env(safe-area-inset-top,0px))">
+        <div class="console-head"><span>fourthink / pesanan</span><span class="live"><i></i>hitung langsung</span></div>
+        <div class="console-body">
+          <div>
+            <label class="flabel" for="pages">Makalah <span id="pagesHint">10 halaman</span></label>
+            <div class="stepper"><button type="button" id="pagesMinus" aria-label="Kurangi halaman">&minus;</button><input id="pages" type="number" inputmode="numeric" min="0" max="500" value="10"><button type="button" id="pagesPlus" aria-label="Tambah halaman">+</button></div>
+            <div class="quick" id="quick" aria-label="Pilihan cepat halaman"></div>
+          </div>
+          <div>
+            <label class="flabel" for="projects">Proyek website</label>
+            <div class="stepper"><button type="button" id="projMinus" aria-label="Kurangi proyek">&minus;</button><input id="projects" type="number" inputmode="numeric" min="0" max="20" value="0"><button type="button" id="projPlus" aria-label="Tambah proyek">+</button></div>
+          </div>
+          <div>
+            <label class="flabel" for="memo">Catatan untuk admin (opsional)</label>
+            <textarea id="memo" placeholder="Contoh: topik makalah, mata kuliah, tenggat pengumpulan"></textarea>
+          </div>
+          <div class="receipt">
+            <div class="r"><span>Makalah</span><b id="subPages">Rp50.000</b></div>
+            <div class="r"><span>Proyek website</span><b id="subProj">Rp0</b></div>
+            <div class="r t"><span>Perkiraan total</span><b id="total">Rp50.000</b></div>
+          </div>
+          <a class="btn block" id="waBtn" href="https://wa.me/6289667809564" target="_blank" rel="noopener">Pesan via WhatsApp</a>
+          <p class="fine">Tombol membuka WhatsApp dengan pesan yang sudah terisi. Tugas kuliah lain tidak termasuk hitungan ini.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel ex"><h3>Contoh biaya makalah</h3><div class="ex-grid" id="exGrid"></div></div>
+
+    <section class="blk">
+      <div class="sec-head"><p class="eyebrow">// cara pesan</p><h2>Empat langkah dari chat sampai selesai.</h2></div>
+      <ol class="steps">
+        <li><h3>Chat admin</h3><p>Hubungi admin lewat WhatsApp dan sebutkan jenis tugasmu.</p></li>
+        <li><h3>Kirim detail</h3><p>Sampaikan topik, jumlah halaman atau kebutuhan proyek, dan tenggat.</p></li>
+        <li><h3>Sepakati harga</h3><p>Harga dikonfirmasi sebelum pengerjaan dimulai.</p></li>
+        <li><h3>Terima hasil</h3><p>Hasil pekerjaan dikirim sesuai tenggat yang disepakati.</p></li>
+      </ol>
+    </section>
+
+    <section class="blk">
+      <div class="sec-head"><p class="eyebrow">// pertanyaan umum</p><h2>Sebelum kamu memesan.</h2></div>
+      <div class="faq">
+        <details><summary>Bagaimana harga makalah dihitung?</summary><p>Rp5.000 dikali jumlah halaman. Misalnya 10 halaman menjadi Rp50.000. Harga final dikonfirmasi admin sebelum pengerjaan dimulai.</p></details>
+        <details><summary>Berapa harga proyek website?</summary><p>Rp35.000 untuk satu proyek. Jika kamu butuh beberapa proyek, kalikan sesuai jumlahnya atau tanyakan admin.</p></details>
+        <details><summary>Bagaimana dengan tugas selain makalah dan website?</summary><p>Kirim detail tugas dan tenggatnya ke admin. Harga disepakati lewat chat sesuai tingkat kesulitan dan waktu pengerjaan.</p></details>
+        <details><summary>Berapa lama pengerjaannya?</summary><p>Waktu pengerjaan dibicarakan lewat chat dan disesuaikan dengan tenggat tugasmu.</p></details>
+      </div>
+    </section>
+  </section>
+
+  <!-- ROBUX -->
+  <section id="robux" class="page">
+    <div class="split">
+      <div>
+        <p class="eyebrow">// toko robux</p>
+        <h2>Top up Robux langsung lewat admin.</h2>
+        <p class="sec-sub">Pilih paket, isi username Roblox, lalu kirim pesanan ke admin lewat WhatsApp. Harga dan cara pembayaran dikonfirmasi sebelum kamu membayar apa pun.</p>
+        <ul class="steps" style="margin-top:26px;grid-template-columns:minmax(0,1fr)">
+          <li><h3>Tanpa password akun</h3><p>Admin tidak pernah meminta password. Cukup username Roblox.</p></li>
+          <li><h3>Harga dikonfirmasi dulu</h3><p>Harga di halaman ini adalah daftar awal. Harga final disampaikan admin.</p></li>
+        </ul>
+      </div>
+      <div class="panel" id="pesanRb" aria-label="Konsol pesanan Robux" style="position:sticky;top:calc(80px + env(safe-area-inset-top,0px))">
+        <div class="console-head"><span>fourting groud / robux</span><span class="live"><i></i>pesan langsung</span></div>
+        <div class="console-body">
+          <div><span class="flabel" id="lblPaket">Pilih paket</span><div class="rb-chips" id="rbChips" role="radiogroup" aria-labelledby="lblPaket"></div></div>
+          <div>
+            <label class="flabel" for="rbUser">Username Roblox</label>
+            <input class="field-in full" id="rbUser" type="text" maxlength="40" placeholder="Contoh: NamaAkunKamu" autocomplete="off">
+            <p class="fine" style="margin-top:6px">Cukup username. Jangan pernah mengirim password.</p>
+          </div>
+          <div class="receipt">
+            <div class="r"><span>Paket</span><b id="rbPack">-</b></div>
+            <div class="r t"><span>Perkiraan harga</span><b id="rbPrice">-</b></div>
+          </div>
+          <a class="btn block" id="waRobux" href="https://wa.me/6289667809564" target="_blank" rel="noopener">Lanjut ke WhatsApp admin</a>
+          <p class="fine">Pesanan baru dianggap masuk setelah admin membalas.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="blk">
+      <div class="sec-head"><p class="eyebrow">// daftar paket</p><h2>Pilih jumlah Robux sesuai kebutuhan.</h2><p class="sec-sub">Semakin besar paket, semakin murah harga per 100 Robux.</p></div>
+      <div class="pack-grid" id="rbGrid"></div>
+    </section>
+
+    <section class="blk">
+      <div class="sec-head"><p class="eyebrow">// pertanyaan umum</p><h2>Sebelum kamu top up.</h2></div>
+      <div class="faq">
+        <details><summary>Apakah saya perlu memberikan password akun?</summary><p>Tidak. Admin tidak pernah meminta password. Jika ada yang meminta password atas nama kami, abaikan dan jangan berikan.</p></details>
+        <details><summary>Berapa lama pesanan diproses?</summary><p>Estimasi waktu disampaikan admin saat pesanan dikonfirmasi, karena bergantung pada metode pengiriman dan antrean saat itu.</p></details>
+        <details><summary>Pembayaran bisa lewat apa saja?</summary><p>Metode pembayaran yang tersedia diberikan admin lewat WhatsApp setelah kamu mengirim pesanan.</p></details>
+        <details><summary>Apakah ini toko resmi Roblox?</summary><p>Bukan. Toko ini independen dan tidak berafiliasi dengan Roblox Corporation. Roblox dan Robux adalah merek milik Roblox Corporation.</p></details>
+        <details><summary>Bagaimana jika ada masalah dengan pesanan?</summary><p>Hubungi admin lewat WhatsApp atau email di halaman Kontak dan sertakan username serta paket yang dipesan.</p></details>
+      </div>
+    </section>
+  </section>
+
+  <!-- TIM -->
+  <section id="tim" class="page">
+    <div class="sec-head"><p class="eyebrow">// fourthinkgroup</p><h2>Dashboard tim.</h2><p class="sec-sub">Think Beyond. Build Together. Kelola tugas, proyek, deadline, dan catatan belajar tim empat orang.</p></div>
+    <div class="subtabs" id="subTabs" role="tablist" aria-label="Bagian dashboard"></div>
+
+    <div id="sub-dashboard" class="sub">
+      <div class="g4" id="dashStats"></div>
+      <div class="g2">
+        <div class="plain"><h3>Progres tim</h3><div id="dashProg"></div></div>
+        <div class="plain squad" id="squad"></div>
+        <div class="plain"><h3>Deadline terdekat</h3><div id="dashDl"></div></div>
+        <div class="plain"><h3>Aktivitas terbaru</h3><div id="dashLog"></div></div>
+      </div>
+    </div>
+
+    <div id="sub-tugas" class="sub">
+      <div class="head"><div><h3>Pembagian Tugas</h3><p>Kelola tugas, penanggung jawab, dan statusnya.</p></div><button class="btn small" data-act="add" data-t="task">+ Tambah Tugas</button></div>
+      <div class="plain" id="taskProg" style="margin-bottom:14px"></div>
+      <div class="toolbar">
+        <div id="taskChips" class="toolbar" style="margin:0"></div>
+        <select id="taskOwner" class="field-in" aria-label="Filter penanggung jawab"></select>
+        <input id="taskQ" class="field-in" type="search" placeholder="Cari tugas" aria-label="Cari tugas" style="flex:1;min-width:140px">
+      </div>
+      <div id="taskList" class="list"></div>
+    </div>
+
+    <div id="sub-proyek" class="sub">
+      <div class="head"><div><h3>Progres Proyek</h3><p>Pantau proyek yang sedang dikerjakan.</p></div><button class="btn small" data-act="add" data-t="project">+ Tambah Proyek</button></div>
+      <div id="projList" class="grid"></div>
+    </div>
+
+    <div id="sub-kalender" class="sub">
+      <div class="head"><div><h3>Kalender Deadline</h3><p>Klik tanggal untuk melihat tugas dan proyek yang jatuh tempo.</p></div></div>
+      <div class="g2">
+        <div class="plain">
+          <div class="cal-head"><h3 id="calTitle"></h3><div class="cal-nav"><button class="mini" data-cal="-1" aria-label="Bulan sebelumnya">&lsaquo;</button><button class="mini" data-cal="0">Hari ini</button><button class="mini" data-cal="1" aria-label="Bulan berikutnya">&rsaquo;</button></div></div>
+          <div class="dow"><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span></div>
+          <div class="days" id="calGrid"></div>
+          <div class="legend"><span><i style="background:var(--cyan)"></i>Tugas</span><span><i style="background:#7c5cff"></i>Proyek</span><span><i style="background:var(--red)"></i>Terlambat</span></div>
+        </div>
+        <div class="plain"><h3 id="calListTitle">Deadline mendatang</h3><div id="calList" class="list" style="margin-top:10px"></div></div>
+      </div>
+    </div>
+
+    <div id="sub-anggota" class="sub">
+      <div class="head"><div><h3>Profil Anggota</h3><p>Klik Edit untuk mengganti data contoh dengan data asli.</p></div></div>
+      <div id="memList" class="grid"></div>
+    </div>
+
+    <div id="sub-jurnal" class="sub">
+      <div class="head"><div><h3>Learning Journal</h3><p>Dokumentasi kendala, solusi, hal baru, dan evaluasi.</p></div><button class="btn small" data-act="add" data-t="journal">+ Tambah Catatan</button></div>
+      <div id="jList" class="timeline"></div>
+    </div>
+
+    <div id="sub-portofolio" class="sub">
+      <div class="head"><div><h3>Portofolio Individu</h3><p>Karya masing-masing anggota.</p></div><button class="btn small" data-act="add" data-t="portfolio">+ Tambah Karya</button></div>
+      <div id="pfList"></div>
+    </div>
+
+    <div id="sub-showcase" class="sub">
+      <div class="head"><div><h3>Showcase Karya Tim</h3><p>Galeri hasil proyek FourthinkGroup.</p></div><button class="btn small" data-act="add" data-t="showcase">+ Tambah Karya Tim</button></div>
+      <div id="scList"></div>
+    </div>
+
+    <div class="team-note">
+      <span id="storeNote"></span>
+      <div class="btns"><button class="mini" data-act="backup">Cadangkan / Impor</button><button class="mini danger" data-act="reset">Reset data tim</button></div>
+    </div>
+  </section>
+
+  <!-- KONTAK -->
+  <section id="kontak" class="page">
+    <div class="sec-head"><p class="eyebrow">// kontak admin</p><h2>Hubungi kami kapan pun kamu siap memesan.</h2><p class="sec-sub">WhatsApp untuk pesanan dan pertanyaan cepat, email untuk keluhan atau urusan yang butuh penjelasan panjang.</p></div>
+    <div class="contact-grid">
+      <div class="panel contact">
+        <p class="label">WhatsApp admin</p>
+        <p class="value" id="wa-text">0896-6780-9564</p>
+        <div class="actions">
+          <a class="btn small" href="https://wa.me/6289667809564?text=Halo%20admin%20Fourthink%2C%20saya%20mau%20tanya%20layanan." target="_blank" rel="noopener">Chat di WhatsApp</a>
+          <button class="btn ghost small" type="button" data-copy="089667809564" data-target="wa-text">Salin nomor</button>
+          <span class="status" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="panel contact">
+        <p class="label">Email</p>
+        <p class="value" id="mail-text">faortinggroud@gmail.com</p>
+        <div class="actions">
+          <button class="btn ghost small" type="button" data-copy="faortinggroud@gmail.com" data-target="mail-text">Salin email</button>
+          <span class="status" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <button class="brand" type="button" data-go="beranda" aria-label="Fourthink, beranda"><svg aria-hidden="true"><use href="#logo"/></svg><span class="word">Four<b>think</b></span></button>
+    <p style="margin-top:10px">&copy; 2026 Fourthink. Admin: 089667809564</p>
+  </div>
+  <p>Toko Robux Fourthink adalah toko independen dan tidak berafiliasi, didukung, atau disponsori oleh Roblox Corporation. Roblox dan Robux adalah merek dagang milik Roblox Corporation.</p>
+</footer>
+
+<a class="fab" href="https://wa.me/6289667809564" target="_blank" rel="noopener" aria-label="Chat admin di WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.9A8 8 0 1 1 21 12z"/><path d="M9 10h6M9 14h4"/></svg><span>Chat Admin</span>
+</a>
+
+<div id="modal" class="modal" hidden><form class="sheet" id="mForm" novalidate><h3 id="mTitle"></h3><div id="mFields"></div>
+  <div class="foot"><button type="button" class="btn ghost small" data-act="close">Batal</button><button type="submit" class="btn small">Simpan</button></div></form></div>
+<div id="confirm" class="modal" hidden><div class="sheet" role="alertdialog" aria-labelledby="cTitle"><h3 id="cTitle"></h3><p class="mut" id="cText"></p>
+  <div class="foot" style="margin-top:20px"><button type="button" class="btn ghost small" data-act="close">Batal</button><button type="button" class="btn danger small" id="cYes">Ya, lanjutkan</button></div></div></div>
+<div id="backup" class="modal" hidden><div class="sheet"><h3>Cadangkan / Impor data tim</h3>
+  <p class="mut" style="margin-bottom:12px;font-size:.9rem">Salin teks di bawah dan kirim ke anggota lain. Untuk memuat data dari teman, tempel teksnya lalu tekan Impor.</p>
+  <textarea id="bkText" class="code" spellcheck="false" aria-label="Data JSON"></textarea><span class="err" id="bkErr"></span>
+  <div class="foot" style="margin-top:14px"><button type="button" class="btn ghost small" data-act="close">Tutup</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn ghost small" id="bkCopy">Salin</button><button type="button" class="btn small" id="bkImport">Impor</button></div></div></div></div>
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+  var WA = "6289667809564";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var rp = function (n) { return "Rp" + new Intl.NumberFormat("id-ID").format(n); };
+  var tt;
+  function toast(m) { var t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(function () { t.classList.remove("show"); }, 2300); }
+  function copyText(text, onOk, onFail) { try { navigator.clipboard.writeText(text).then(onOk, onFail); } catch (e) { onFail(); } }
+
+  /* ========== Navigasi utama ========== */
+  var PAGES = [["beranda", "Beranda"], ["jasa", "Jasa Tugas"], ["robux", "Robux"], ["tim", "Tim"], ["kontak", "Kontak"]];
+  var page = "beranda";
+  $("#tabs").innerHTML = PAGES.map(function (p) { return '<button class="tab" type="button" data-go="' + p[0] + '">' + p[1] + "</button>"; }).join("");
+  function show(id) {
+    if (!PAGES.some(function (p) { return p[0] === id; })) id = "beranda";
+    page = id;
+    $$(".page").forEach(function (s) { s.classList.toggle("active", s.id === id); });
+    $$(".tab").forEach(function (b) { if (b.getAttribute("data-go") === id) { b.setAttribute("aria-current", "page"); try { b.scrollIntoView({ block: "nearest", inline: "center" }); } catch (e) {} } else b.removeAttribute("aria-current"); });
+    try { if (location.hash !== "#" + id) location.hash = id; } catch (e) {}
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", function () { var h = ""; try { h = location.hash.slice(1); } catch (e) {} if (h && h !== page) show(h); });
+
+  /* ========== Jasa tugas ========== */
+  var PRICE_PAGE = 5000, PRICE_PROJ = 35000, PRESETS = [5, 10, 20, 30, 50];
+  var pages = $("#pages"), projects = $("#projects"), memo = $("#memo"), quick = $("#quick");
+  var clamp = function (el, max) { var v = parseInt(el.value, 10); if (isNaN(v) || v < 0) v = 0; return v > max ? max : v; };
+  quick.innerHTML = PRESETS.map(function (n) { return '<button type="button" data-n="' + n + '" aria-pressed="false">' + n + " hal</button>"; }).join("");
+  $("#exGrid").innerHTML = PRESETS.map(function (n) { return "<div><small>" + n + " halaman</small><b>" + rp(n * PRICE_PAGE) + "</b></div>"; }).join("");
+  function updJasa() {
+    var p = clamp(pages, 500), j = clamp(projects, 20), sp = p * PRICE_PAGE, sj = j * PRICE_PROJ, t = sp + sj;
+    $("#pagesHint").textContent = p + " halaman";
+    $("#subPages").textContent = rp(sp); $("#subProj").textContent = rp(sj); $("#total").textContent = rp(t);
+    Array.prototype.forEach.call(quick.children, function (b) { b.setAttribute("aria-pressed", String(Number(b.getAttribute("data-n")) === p)); });
+    var lines = ["Halo admin Fourthink, saya mau pesan jasa tugas."];
+    if (p > 0) lines.push("- Makalah: " + p + " halaman (" + rp(sp) + ")");
+    if (j > 0) lines.push("- Proyek website: " + j + " proyek (" + rp(sj) + ")");
+    if (t > 0) lines.push("Perkiraan total: " + rp(t));
+    var note = memo.value.trim(); if (note) lines.push("Catatan: " + note);
+    $("#waBtn").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(lines.join("\n"));
+  }
+  function bump(el, d, max) { el.value = Math.max(0, Math.min(max, clamp(el, max) + d)); updJasa(); }
+  $("#pagesMinus").addEventListener("click", function () { bump(pages, -1, 500); });
+  $("#pagesPlus").addEventListener("click", function () { bump(pages, 1, 500); });
+  $("#projMinus").addEventListener("click", function () { bump(projects, -1, 20); });
+  $("#projPlus").addEventListener("click", function () { bump(projects, 1, 20); });
+  quick.addEventListener("click", function (e) { var b = e.target.closest("button[data-n]"); if (!b) return; pages.value = b.getAttribute("data-n"); updJasa(); });
+  [pages, projects, memo].forEach(function (el) { el.addEventListener("input", updJasa); });
+  updJasa();
+
+  /* ========== Robux ========== */
+  /* Daftar harga: ubah angka p (rupiah) di sini untuk memperbarui seluruh halaman. */
+  var PACKS = [{ r: 80, p: 15000 }, { r: 400, p: 62000 }, { r: 800, p: 120000 }, { r: 1700, p: 250000 }, { r: 4500, p: 650000 }, { r: 10000, p: 1400000 }];
+  var sel = 2, rb = function (n) { return n.toLocaleString("id-ID"); };
+  $("#tickRobux").innerHTML = rp(PACKS[0].p) + "<small>" + rb(PACKS[0].r) + " Robux</small>";
+  $("#rbChips").innerHTML = PACKS.map(function (k, i) { return '<label class="rchip"><input type="radio" name="paket" value="' + i + '"' + (i === sel ? " checked" : "") + '><span class="amt">' + rb(k.r) + '</span><span class="prc">' + rp(k.p) + "</span></label>"; }).join("");
+  $("#rbGrid").innerHTML = PACKS.map(function (k, i) { return '<div class="pack"><span class="robux">' + rb(k.r) + '</span><span class="unit">Robux</span><span class="pp">' + rp(k.p) + '</span><span class="rate">' + rp(Math.round(k.p / k.r * 100)) + ' / 100 Robux</span><button class="btn ghost small" type="button" data-pick="' + i + '">Pilih paket</button></div>'; }).join("");
+  function updRb() {
+    var k = PACKS[sel], name = $("#rbUser").value.trim();
+    $("#rbPack").textContent = rb(k.r) + " Robux"; $("#rbPrice").textContent = rp(k.p);
+    var msg = ["Halo admin Fourthink, saya mau order Robux.", "", "Paket: " + rb(k.r) + " Robux", "Perkiraan harga: " + rp(k.p), "Username Roblox: " + (name || "(belum diisi)"), "", "Mohon konfirmasi harga dan cara pembayarannya. Terima kasih."].join("\n");
+    $("#waRobux").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
+  }
+  $("#rbChips").addEventListener("change", function (e) { if (e.target && e.target.name === "paket") { sel = Number(e.target.value); updRb(); } });
+  $("#rbUser").addEventListener("input", updRb);
+  $("#rbGrid").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-pick]"); if (!b) return;
+    sel = Number(b.getAttribute("data-pick"));
+    var r = $('#rbChips input[value="' + sel + '"]'); if (r) r.checked = true;
+    updRb(); window.scrollTo(0, 0);
+  });
+  updRb();
+
+  /* ========== Kontak: salin ========== */
+  $$("[data-copy]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var st = btn.parentNode.querySelector(".status");
+      function done(m) { if (st) { st.textContent = m; setTimeout(function () { st.textContent = ""; }, 2500); } }
+      copyText(btn.getAttribute("data-copy"), function () { done("Tersalin"); }, function () {
+        var el = document.getElementById(btn.getAttribute("data-target"));
+        if (el) { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+        done("Teks terpilih, salin manual");
+      });
+    });
+  });
+
+  /* ========== Dashboard Tim ========== */
+  var KEY = "fourthink_v2";
+  var ST = ["Belum Dimulai", "Sedang Dikerjakan", "Selesai"], PR = ["Tinggi", "Sedang", "Rendah"];
+  var SUBS = [["dashboard", "Dashboard"], ["tugas", "Tugas"], ["proyek", "Proyek"], ["kalender", "Kalender"], ["anggota", "Anggota"], ["jurnal", "Jurnal"], ["portofolio", "Portofolio"], ["showcase", "Showcase"]];
+  var COLORS = ["#2f6bff", "#0ea5c6", "#7c5cff", "#14b8a6"];
+  var uid = function () { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); };
+  var pad = function (n) { return String(n).padStart(2, "0"); };
+  var iso = function (d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+  var plus = function (n) { var d = new Date(); d.setDate(d.getDate() + n); return iso(d); };
+  var dt = function (s) { return new Date(s + "T00:00:00"); };
+  var fmt = function (s) { return s ? dt(s).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "-"; };
+  var tm = function (s) { return new Date(s).toLocaleString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); };
+  var left = function (s) { return Math.round((dt(s) - dt(iso(new Date()))) / 864e5); };
+  var pct = function (a, b) { return b ? Math.round(a / b * 100) : 0; };
+
+  function seed() {
+    var roles = ["Project Lead", "Frontend Developer", "UI/UX Designer", "Quality & Docs"];
+    return {
+      members: roles.map(function (r, i) { return { id: "m" + (i + 1), name: "Anggota " + (i + 1), role: r, bio: "Deskripsi singkat Anggota " + (i + 1) + ". Klik Edit untuk menggantinya.", skills: "HTML, CSS, JavaScript", projects: "Website Fourthink", link: "" }; }),
+      projects: [
+        { id: uid(), name: "Website Fourthink", desc: "Situs layanan dan pusat kolaborasi tim.", status: "Sedang Dikerjakan", progress: 60, deadline: plus(14) },
+        { id: uid(), name: "Aplikasi Catatan Kelas", desc: "Catatan belajar sederhana berbasis web.", status: "Belum Dimulai", progress: 0, deadline: plus(30) }
+      ],
+      tasks: [
+        { id: uid(), name: "Rancang wireframe halaman utama", owner: "m3", priority: "Tinggi", status: "Selesai", deadline: plus(-2) },
+        { id: uid(), name: "Buat komponen kartu tugas", owner: "m2", priority: "Sedang", status: "Sedang Dikerjakan", deadline: plus(2) },
+        { id: uid(), name: "Tulis dokumentasi README", owner: "m4", priority: "Rendah", status: "Belum Dimulai", deadline: plus(-1) },
+        { id: uid(), name: "Siapkan jadwal rapat mingguan", owner: "m1", priority: "Sedang", status: "Belum Dimulai", deadline: plus(5) }
+      ],
+      journal: [{ id: uid(), title: "Belajar localStorage", date: plus(-1), category: "Teknis", content: "Mencoba menyimpan data langsung di browser.", obstacle: "Data hilang saat format JSON salah.", solution: "Memakai JSON.stringify dan try/catch.", learned: "localStorage hanya menyimpan teks.", evaluation: "Perlu cara berbagi data antar anggota." }],
+      portfolio: [{ id: uid(), member: "m1", name: "Proyek Contoh", desc: "Ganti dengan karya asli anggota.", tech: "HTML, CSS, JS", link: "" }],
+      showcase: [{ id: uid(), title: "Website Fourthink", desc: "Situs layanan dan dashboard tim.", category: "Web", status: "Sedang Dikerjakan", link: "" }],
+      log: []
+    };
+  }
+  var S = null, storeOK = true;
+  function valid(o) { return o && ["members", "projects", "tasks", "journal", "portfolio", "showcase", "log"].every(function (k) { return Array.isArray(o[k]); }); }
+  try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; }
+  if (!valid(S)) S = seed();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); storeOK = true; } catch (e) { storeOK = false; } $("#storeNote").textContent = storeOK ? "Data tim tersimpan di browser ini saja dan tidak tersinkron antar anggota. Gunakan Cadangkan untuk membagikan data." : "Penyimpanan browser tidak tersedia. Data hilang saat halaman ditutup, jadi gunakan Cadangkan."; }
+  function commit() { save(); render(); }
+  function log(t) { S.log.unshift({ t: t, at: new Date().toISOString() }); S.log = S.log.slice(0, 10); }
+
+  var A = function (a) { return a.map(function (x) { return [x, x]; }); };
+  var mem = function () { return S.members.map(function (m) { return [m.id, m.name]; }); };
+  var F = {
+    task: { key: "tasks", n: "Tugas", l: "name", f: [["name", "Nama tugas", "text", 1], ["owner", "Penanggung jawab", "select", 1, mem], ["priority", "Prioritas", "select", 0, function () { return A(PR); }], ["status", "Status", "select", 0, function () { return A(ST); }], ["deadline", "Deadline", "date", 1]] },
+    project: { key: "projects", n: "Proyek", l: "name", f: [["name", "Nama proyek", "text", 1], ["desc", "Deskripsi", "textarea", 1], ["status", "Status", "select", 0, function () { return A(ST); }], ["progress", "Progres", "range", 0], ["deadline", "Deadline", "date", 1]] },
+    member: { key: "members", n: "Anggota", l: "name", f: [["name", "Nama", "text", 1], ["role", "Peran di tim", "text", 1], ["bio", "Deskripsi singkat", "textarea", 0], ["skills", "Skill (pisahkan dengan koma)", "text", 0], ["projects", "Proyek yang pernah dikerjakan", "text", 0], ["link", "Link GitHub / portofolio", "url", 0]] },
+    journal: { key: "journal", n: "Catatan", l: "title", f: [["title", "Judul", "text", 1], ["date", "Tanggal", "date", 1], ["category", "Kategori", "select", 0, function () { return A(["Teknis", "Desain", "Kolaborasi", "Lainnya"]); }], ["content", "Isi catatan", "textarea", 1], ["obstacle", "Kendala", "textarea", 0], ["solution", "Solusi", "textarea", 0], ["learned", "Hal baru yang dipelajari", "textarea", 0], ["evaluation", "Evaluasi", "textarea", 0]] },
+    portfolio: { key: "portfolio", n: "Karya", l: "name", f: [["member", "Anggota", "select", 1, mem], ["name", "Nama proyek", "text", 1], ["desc", "Deskripsi", "textarea", 0], ["tech", "Teknologi (pisahkan dengan koma)", "text", 0], ["link", "Link demo / repository", "url", 0]] },
+    showcase: { key: "showcase", n: "Karya Tim", l: "title", f: [["title", "Judul", "text", 1], ["desc", "Deskripsi", "textarea", 0], ["category", "Kategori", "select", 0, function () { return A(["Web", "Mobile", "Desain", "Riset", "Lainnya"]); }], ["status", "Status", "select", 0, function () { return A([ST[1], ST[2]]); }], ["link", "Link proyek", "url", 0]] }
+  };
+
+  /* modal */
+  var cur = null, lastFocus = null, onYes = null;
+  function openModal(id) { lastFocus = document.activeElement; $("#" + id).hidden = false; var f = $("#" + id + " input, #" + id + " select, #" + id + " textarea, #" + id + " .btn"); if (f) f.focus(); }
+  function closeModals() { $$(".modal").forEach(function (m) { m.hidden = true; }); cur = null; onYes = null; if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} } }
+  function ask(title, text, yes) { $("#cTitle").textContent = title; $("#cText").textContent = text; onYes = yes; openModal("confirm"); }
+  function openForm(t, id) {
+    var c = F[t], item = id ? S[c.key].filter(function (x) { return x.id === id; })[0] : {};
+    if (id && !item) return;
+    cur = { t: t, id: id };
+    $("#mTitle").textContent = (id ? "Edit " : "Tambah ") + c.n;
+    $("#mFields").innerHTML = c.f.map(function (d) {
+      var k = d[0], l = d[1], ty = d[2], req = d[3], o = d[4];
+      var v = item[k] != null ? item[k] : (ty === "date" ? iso(new Date()) : ty === "range" ? 0 : "");
+      var inp;
+      if (ty === "select") inp = '<select class="field-in" name="' + k + '">' + o().map(function (p) { return '<option value="' + esc(p[0]) + '"' + (p[0] === v ? " selected" : "") + ">" + esc(p[1]) + "</option>"; }).join("") + "</select>";
+      else if (ty === "textarea") inp = '<textarea name="' + k + '" rows="3">' + esc(v) + "</textarea>";
+      else if (ty === "range") inp = '<div class="rng"><input type="range" name="' + k + '" min="0" max="100" step="5" value="' + esc(v) + '" data-out="out-' + k + '"><output id="out-' + k + '">' + esc(v) + "%</output></div>";
+      else inp = '<input class="field-in" name="' + k + '" type="' + ty + '" value="' + esc(v) + '">';
+      return "<label>" + l + (req ? " *" : "") + inp + '<small class="err" data-e="' + k + '"></small></label>';
+    }).join("");
+    openModal("modal");
+  }
+  $("#mForm").addEventListener("input", function (e) { var o = e.target.getAttribute && e.target.getAttribute("data-out"); if (o) $("#" + o).textContent = e.target.value + "%"; });
+  $("#mForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!cur) return;
+    var c = F[cur.t], data = {}, ok = true;
+    $$(".err").forEach(function (x) { x.textContent = ""; });
+    c.f.forEach(function (d) {
+      var k = d[0], l = d[1], ty = d[2], req = d[3], v = e.target.elements[k].value.trim();
+      if (req && !v) { $('[data-e="' + k + '"]').textContent = l + " wajib diisi"; ok = false; }
+      else if (ty === "range") v = Number(v);
+      else if (ty === "url" && v && !/^https?:\/\//i.test(v)) v = "https://" + v;
+      data[k] = v;
+    });
+    if (!ok) return;
+    if (cur.t === "project" && data.status === "Selesai") data.progress = 100;
+    var list = S[c.key];
+    if (cur.id) Object.assign(list.filter(function (x) { return x.id === cur.id; })[0], data); else list.push(Object.assign({ id: uid() }, data));
+    log((cur.id ? "Mengubah " : "Menambah ") + c.n.toLowerCase() + ": " + data[c.l]);
+    closeModals(); commit(); toast("Tersimpan");
+  });
+  function del(t, id) {
+    var c = F[t], it = S[c.key].filter(function (x) { return x.id === id; })[0];
+    if (!it) return;
+    ask("Hapus " + c.n.toLowerCase() + "?", "“" + it[c.l] + "” akan dihapus dari data ini.", function () {
+      S[c.key] = S[c.key].filter(function (x) { return x.id !== id; });
+      log("Menghapus " + c.n.toLowerCase() + ": " + it[c.l]);
+      closeModals(); commit(); toast(c.n + " dihapus");
+    });
+  }
+  function openBackup() { $("#bkText").value = JSON.stringify(S, null, 2); $("#bkErr").textContent = ""; openModal("backup"); }
+  $("#bkCopy").addEventListener("click", function () { var ta = $("#bkText"); copyText(ta.value, function () { toast("Data tersalin"); }, function () { ta.focus(); ta.select(); toast("Teks dipilih, salin manual"); }); });
+  $("#bkImport").addEventListener("click", function () {
+    var o = null; try { o = JSON.parse($("#bkText").value); } catch (e) {}
+    if (!valid(o)) { $("#bkErr").textContent = "Teks tidak valid. Pastikan seluruh data dari Cadangkan ikut ditempel."; return; }
+    S = o; closeModals(); commit(); toast("Data diimpor");
+  });
+
+  /* sub-tab tim */
+  var sub = "dashboard", filter = "Semua", owner = "all", q = "", calM = new Date(), calSel = null;
+  function showSub(id) {
+    sub = id;
+    $$(".sub").forEach(function (s) { s.classList.toggle("active", s.id === "sub-" + id); });
+    $$(".stab").forEach(function (b) { b.setAttribute("aria-current", String(b.getAttribute("data-sub") === id)); });
+  }
+
+  /* klik global */
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-go]");
+    if (g) { show(g.getAttribute("data-go")); return; }
+    var sb = e.target.closest("[data-sub]");
+    if (sb) { showSub(sb.getAttribute("data-sub")); return; }
+    var cm = e.target.closest("[data-cal]");
+    if (cm) { var v = Number(cm.getAttribute("data-cal")); if (v === 0) { calM = new Date(); calSel = iso(new Date()); } else calM = new Date(calM.getFullYear(), calM.getMonth() + v, 1); renderCal(); return; }
+    var dy = e.target.closest("[data-day]");
+    if (dy) { var d = dy.getAttribute("data-day"); calSel = calSel === d ? null : d; renderCal(); return; }
+    var b = e.target.closest("[data-act]");
+    if (!b) return;
+    var act = b.getAttribute("data-act"), t = b.getAttribute("data-t"), id = b.getAttribute("data-id");
+    if (act === "add") openForm(t);
+    else if (act === "edit") openForm(t, id);
+    else if (act === "del") del(t, id);
+    else if (act === "close") closeModals();
+    else if (act === "backup") openBackup();
+    else if (act === "filter") { filter = b.getAttribute("data-v"); renderTasks(); }
+    else if (act === "toggle") {
+      var k = S.tasks.filter(function (x) { return x.id === id; })[0]; if (!k) return;
+      k.status = k.status === "Selesai" ? "Belum Dimulai" : "Selesai";
+      log((k.status === "Selesai" ? "Menyelesaikan" : "Membuka kembali") + " tugas: " + k.name);
+      commit();
+    } else if (act === "reset") ask("Reset data tim?", "Semua data tim diganti dengan contoh awal. Tindakan ini tidak bisa dibatalkan.", function () { S = seed(); closeModals(); commit(); toast("Data direset"); });
+  });
+  $("#cYes").addEventListener("click", function () { var f = onYes; if (f) f(); });
+  $$(".modal").forEach(function (m) { m.addEventListener("mousedown", function (e) { if (e.target === m) closeModals(); }); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModals(); });
+  $("#taskOwner").addEventListener("change", function (e) { owner = e.target.value; renderTasks(); });
+  $("#taskQ").addEventListener("input", function (e) { q = e.target.value.trim().toLowerCase(); renderTasks(); });
+
+  /* helper tampilan */
+  var mIdx = function (id) { return Math.max(0, S.members.findIndex(function (m) { return m.id === id; })); };
+  var mName = function (id) { var m = S.members.filter(function (x) { return x.id === id; })[0]; return m ? m.name : "(anggota dihapus)"; };
+  var init = function (n) { return esc(String(n).trim().split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase()); };
+  var who = function (id) { return '<span class="who" style="background:' + COLORS[mIdx(id) % 4] + '">' + init(mName(id)) + "</span>" + esc(mName(id)); };
+  var badge = function (t, c) { return '<span class="badge ' + (c || "") + '">' + esc(t) + "</span>"; };
+  var bar = function (p) { return '<div class="bar"><i style="width:' + p + '%"></i></div>'; };
+  var acts = function (t, id, noDel) { return '<div class="acts"><button class="mini" data-act="edit" data-t="' + t + '" data-id="' + id + '">Edit</button>' + (noDel ? "" : '<button class="mini danger" data-act="del" data-t="' + t + '" data-id="' + id + '">Hapus</button>') + "</div>"; };
+  var empty = function (m) { return '<div class="empty"><b>Belum ada data</b>' + m + "</div>"; };
+  var link = function (u, l) { return /^https?:\/\//i.test(u) ? '<a class="lnk" href="' + esc(u) + '" target="_blank" rel="noopener">' + l + " &#8599;</a>" : ""; };
+  var chips = function (s) { return String(s || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean).map(function (x) { return badge(x); }).join(""); };
+  var stat = function (n, l) { return '<div class="stat"><b>' + n + "</b><span>" + l + "</span></div>"; };
+  var prCls = { Tinggi: "late", Sedang: "warn", Rendah: "" };
+  var stCls = function (s) { return s === "Selesai" ? "ok" : s === "Sedang Dikerjakan" ? "prog" : ""; };
+  function due(d, done) {
+    if (done) return badge("Selesai", "ok");
+    var n = left(d);
+    return n < 0 ? badge("Terlambat " + (-n) + " hari", "late") : n === 0 ? badge("Hari ini", "warn") : n <= 3 ? badge("H-" + n, "warn") : badge(n + " hari lagi");
+  }
+  function deadlines() {
+    return S.tasks.filter(function (t) { return t.status !== "Selesai"; }).map(function (t) { return { k: "Tugas", n: t.name, date: t.deadline, sub: mName(t.owner) }; })
+      .concat(S.projects.filter(function (p) { return p.status !== "Selesai"; }).map(function (p) { return { k: "Proyek", n: p.name, date: p.deadline, sub: p.progress + "%" }; }))
+      .sort(function (a, b) { return a.date.localeCompare(b.date); });
+  }
+  var dlRow = function (d) { return '<div class="item"><div class="grow"><b>' + esc(d.n) + "</b><small>" + d.k + " &middot; " + esc(d.sub) + " &middot; " + fmt(d.date) + "</small></div>" + due(d.date) + "</div>"; };
+
+  function renderTasks() {
+    var T = S.tasks, done = T.filter(function (x) { return x.status === "Selesai"; }).length;
+    $("#taskProg").innerHTML = '<div class="row-between"><span>Penyelesaian tugas (' + done + "/" + T.length + ")</span><b>" + pct(done, T.length) + "%</b></div>" + bar(pct(done, T.length));
+    $("#taskChips").innerHTML = ["Semua"].concat(ST).map(function (s) { return '<button class="chip" type="button" aria-pressed="' + (s === filter) + '" data-act="filter" data-v="' + s + '">' + s + "</button>"; }).join("");
+    var sl = $("#taskOwner");
+    if (owner !== "all" && !S.members.some(function (m) { return m.id === owner; })) owner = "all";
+    sl.innerHTML = '<option value="all">Semua anggota</option>' + S.members.map(function (m) { return '<option value="' + m.id + '">' + esc(m.name) + "</option>"; }).join("");
+    sl.value = owner;
+    var fl = T.filter(function (x) { return (filter === "Semua" || x.status === filter) && (owner === "all" || x.owner === owner) && (!q || x.name.toLowerCase().indexOf(q) > -1); });
+    $("#taskList").innerHTML = fl.length ? fl.slice().sort(function (a, b) { return a.deadline.localeCompare(b.deadline); }).map(function (t) {
+      var d = t.status === "Selesai";
+      return '<div class="item task' + (d ? " done" : "") + '"><input type="checkbox" data-act="toggle" data-id="' + t.id + '"' + (d ? " checked" : "") + ' aria-label="Tandai selesai: ' + esc(t.name) + '"><div class="grow"><b>' + esc(t.name) + "</b><small>" + who(t.owner) + " &middot; " + fmt(t.deadline) + '</small><div class="tags">' + badge(t.priority, prCls[t.priority]) + badge(t.status, stCls(t.status)) + due(t.deadline, d) + "</div></div>" + acts("task", t.id) + "</div>";
+    }).join("") : empty(T.length ? "Tidak ada tugas yang cocok dengan filter." : 'Klik "+ Tambah Tugas" untuk membuat tugas pertama.');
+  }
+
+  function renderCal() {
+    var y = calM.getFullYear(), m = calM.getMonth(), todayS = iso(new Date());
+    $("#calTitle").textContent = new Date(y, m, 1).toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+    var all = S.tasks.map(function (t) { return { k: "Tugas", n: t.name, date: t.deadline, sub: mName(t.owner), done: t.status === "Selesai" }; })
+      .concat(S.projects.map(function (p) { return { k: "Proyek", n: p.name, date: p.deadline, sub: p.progress + "%", done: p.status === "Selesai" }; }));
+    var byDay = {}; all.forEach(function (x) { (byDay[x.date] = byDay[x.date] || []).push(x); });
+    var first = new Date(y, m, 1), startDow = (first.getDay() + 6) % 7, start = new Date(y, m, 1 - startDow), cells = "";
+    for (var i = 0; i < 42; i++) {
+      var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), s = iso(d), its = (byDay[s] || []).filter(function (x) { return !x.done; });
+      var dots = its.slice(0, 3).map(function (x) { return '<i class="' + (left(s) < 0 ? "l" : x.k === "Tugas" ? "t" : "") + '"></i>'; }).join("");
+      cells += '<button type="button" class="day' + (d.getMonth() !== m ? " out" : "") + (s === todayS ? " today" : "") + '" data-day="' + s + '" aria-pressed="' + (calSel === s) + '" aria-label="' + fmt(s) + (its.length ? ", " + its.length + " deadline" : "") + '">' + d.getDate() + '<span class="dots">' + dots + "</span></button>";
+      if (i === 34 && d.getMonth() !== m) break;
+    }
+    $("#calGrid").innerHTML = cells;
+    var list;
+    if (calSel) { $("#calListTitle").textContent = "Deadline " + fmt(calSel); list = all.filter(function (x) { return x.date === calSel; }); }
+    else { $("#calListTitle").textContent = "Deadline mendatang"; list = deadlines().slice(0, 8); }
+    $("#calList").innerHTML = list.length ? list.map(dlRow).join("") : empty(calSel ? "Tidak ada deadline pada tanggal ini." : "Semua tugas dan proyek sudah selesai.");
+  }
+
+  function render() {
+    var T = S.tasks, P = S.projects, done = T.filter(function (x) { return x.status === "Selesai"; }).length, active = P.filter(function (p) { return p.status !== "Selesai"; }).length, dl = deadlines();
+    var late = T.filter(function (t) { return t.status !== "Selesai" && left(t.deadline) < 0; }).length;
+    $$(".stab").forEach(function (b) { var old = $(".n", b); if (old) old.remove(); if (b.getAttribute("data-sub") === "tugas" && late) b.insertAdjacentHTML("beforeend", '<span class="n" title="' + late + ' tugas terlambat">' + late + "</span>"); });
+
+    $("#dashStats").innerHTML = stat(T.length, "Total tugas") + stat(done, "Tugas selesai") + stat(active, "Proyek aktif") + stat(late, "Tugas terlambat");
+    var C = 2 * Math.PI * 56, p = pct(done, T.length);
+    $("#dashProg").innerHTML = '<div class="donut-wrap"><div class="donut"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="56" fill="none" stroke="#101c38" stroke-width="12"/><circle cx="66" cy="66" r="56" fill="none" stroke="#38d4ff" stroke-width="12" stroke-linecap="round" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - p / 100)).toFixed(1) + '"/></svg><div class="c"><div>' + p + '%<small>selesai</small></div></div></div><div class="grow" style="min-width:170px">' + S.members.map(function (m) {
+      var a = T.filter(function (x) { return x.owner === m.id; }), d = a.filter(function (x) { return x.status === "Selesai"; }).length;
+      return '<div class="mrow"><div class="row-between"><span>' + esc(m.name) + '</span><small class="mut">' + d + "/" + a.length + "</small></div>" + bar(pct(d, a.length)) + "</div>";
+    }).join("") + "</div></div>";
+    $("#squad").innerHTML = "<h3>Skuad tim</h3>" + S.members.map(function (m, i) {
+      var a = T.filter(function (x) { return x.owner === m.id; }), d = a.filter(function (x) { return x.status === "Selesai"; }).length;
+      return '<div class="m"><span class="av" style="background:' + COLORS[i % 4] + '">' + init(m.name) + '</span><div><b>' + esc(m.name) + "</b><small>" + esc(m.role) + " &middot; " + d + "/" + a.length + " tugas</small></div></div>";
+    }).join("");
+    $("#dashDl").innerHTML = dl.length ? '<div class="list" style="margin-top:10px">' + dl.slice(0, 4).map(dlRow).join("") + "</div>" : empty("Tidak ada deadline aktif.");
+    $("#dashLog").innerHTML = S.log.length ? '<div class="list" style="margin-top:10px">' + S.log.map(function (l) { return '<div class="item"><small style="color:var(--fg)">' + esc(l.t) + '</small><small class="mono" style="flex:none">' + tm(l.at) + "</small></div>"; }).join("") + "</div>" : empty("Aktivitas akan muncul di sini.");
+
+    renderTasks(); renderCal();
+
+    $("#projList").innerHTML = P.length ? P.map(function (x) { return '<article class="plain hov"><div class="row-between"><h3>' + esc(x.name) + "</h3>" + badge(x.status, stCls(x.status)) + '</div><p class="mut">' + esc(x.desc) + '</p><div class="row-between"><span>Progres</span><b class="mono">' + x.progress + "%</b></div>" + bar(x.progress) + '<div class="row-between"><small class="mut">Deadline: ' + fmt(x.deadline) + "</small>" + due(x.deadline, x.status === "Selesai") + "</div>" + acts("project", x.id) + "</article>"; }).join("") : empty('Klik "+ Tambah Proyek" untuk memulai.');
+
+    $("#memList").innerHTML = S.members.map(function (m, i) {
+      return '<article class="plain hov member"><div class="avatar" style="background:' + COLORS[i % 4] + '">' + init(m.name) + "</div><h3>" + esc(m.name) + '</h3><span class="role">' + esc(m.role) + '</span><p class="mut">' + esc(m.bio) + '</p><div class="tags">' + chips(m.skills) + '</div><small class="mut">Proyek: ' + esc(m.projects || "-") + "</small><br>" + link(m.link, "GitHub / Portofolio") + acts("member", m.id, 1) + "</article>";
+    }).join("");
+
+    var J = S.journal.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+    $("#jList").innerHTML = J.length ? J.map(function (j) {
+      return '<article class="tl"><div class="dot"></div><div class="plain"><div class="row-between"><h3>' + esc(j.title) + "</h3>" + badge(j.category) + '</div><small class="mut">' + fmt(j.date) + "</small><p>" + esc(j.content) + "</p>" +
+        [["Kendala", j.obstacle], ["Solusi", j.solution], ["Hal baru", j.learned], ["Evaluasi", j.evaluation]].filter(function (x) { return x[1]; }).map(function (x) { return '<p class="kv"><b>' + x[0] + ":</b> " + esc(x[1]) + "</p>"; }).join("") + acts("journal", j.id) + "</div></article>";
+    }).join("") : empty('Klik "+ Tambah Catatan" untuk mulai mendokumentasikan belajar.');
+
+    $("#pfList").innerHTML = S.members.map(function (m) {
+      var L = S.portfolio.filter(function (x) { return x.member === m.id; });
+      return '<div class="grp"><h3>' + esc(m.name) + ' <small class="mut">&middot; ' + esc(m.role) + "</small></h3>" + (L.length ? '<div class="grid">' + L.map(function (x) { return '<article class="plain hov"><h3>' + esc(x.name) + '</h3><p class="mut">' + esc(x.desc) + '</p><div class="tags">' + chips(x.tech) + "</div>" + link(x.link, "Demo / Repo") + acts("portfolio", x.id) + "</article>"; }).join("") + "</div>" : empty("Belum ada karya untuk anggota ini.")) + "</div>";
+    }).join("");
+
+    function sc(fin) {
+      var L = S.showcase.filter(function (x) { return (x.status === "Selesai") === fin; });
+      return L.length ? '<div class="grid">' + L.map(function (x) { return '<article class="plain hov"><div class="thumb">' + esc((x.title.trim()[0] || "?").toUpperCase()) + '</div><div class="row-between"><h3>' + esc(x.title) + "</h3>" + badge(x.category) + "</div>" + badge(x.status, stCls(x.status)) + '<p class="mut">' + esc(x.desc) + "</p>" + link(x.link, "Buka proyek") + acts("showcase", x.id) + "</article>"; }).join("") + "</div>" : empty(fin ? "Belum ada karya yang selesai." : "Belum ada karya yang sedang dikerjakan.");
+    }
+    $("#scList").innerHTML = '<h3 class="sub-h">Sedang dikerjakan</h3>' + sc(false) + '<h3 class="sub-h">Selesai</h3>' + sc(true);
+  }
+
+  $("#subTabs").innerHTML = SUBS.map(function (s) { return '<button class="stab" type="button" data-sub="' + s[0] + '">' + s[1] + "</button>"; }).join("");
+  save(); render(); showSub("dashboard");
+
+  /* ========== Latar jaringan node ========== */
+  var c = $("#net"), g = c.getContext("2d"), w = 0, h = 0, nodes = [];
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function size() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth; h = window.innerHeight; c.width = w * dpr; c.height = h * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.round(Math.min(64, (w * h) / 18000)); nodes = [];
+    for (var i = 0; i < n; i++) nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .26, vy: (Math.random() - .5) * .26 });
+  }
+  function frame() {
+    g.clearRect(0, 0, w, h);
+    var i, j, a, b, dx, dy, d;
+    for (i = 0; i < nodes.length; i++) {
+      a = nodes[i];
+      if (!reduce) { a.x += a.vx; a.y += a.vy; if (a.x < 0 || a.x > w) a.vx *= -1; if (a.y < 0 || a.y > h) a.vy *= -1; }
+      for (j = i + 1; j < nodes.length; j++) {
+        b = nodes[j]; dx = a.x - b.x; dy = a.y - b.y; d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 150) { g.strokeStyle = "rgba(63,160,255," + (0.2 * (1 - d / 150)).toFixed(3) + ")"; g.lineWidth = 1; g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke(); }
+      }
+    }
+    for (i = 0; i < nodes.length; i++) { g.fillStyle = "rgba(56,212,255,.6)"; g.fillRect(nodes[i].x - 1.5, nodes[i].y - 1.5, 3, 3); }
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  size(); frame();
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { size(); if (reduce) frame(); }, 150); });
+
+  var h0 = ""; try { h0 = location.hash.slice(1); } catch (e) {}
+  show(h0 || "beranda");
+})();
+</script>
+
+</body></html>
